@@ -1,0 +1,40 @@
+%planificación de la trayectoria según el campo potencial
+function [ xp, yp ] = potentialFieldPathPlanning( Xpp, Ypp, fXpp, fYpp)
+
+ss=1;
+k=1;
+xp=[];
+yp=[];
+xp(1)=xI(1);
+yp(1)=xI(2);
+ix=[];
+iy=[];
+jx=[];
+jy=[];
+fxx=0;
+fyy=0;
+
+while ss
+%%for ss=1:3000
+    Pw = sqrt(((Xpp-xp(k)).^2)+((Ypp-yp(k)).^2)); %Pw matrix de distancia respecto a la posicion actual
+    xw(k)     = min(min(Pw));          % valor mínimo de la matriz Pw
+    [iix,iiy] = find(Pw==xw(k));   % encontrar la posición del matriz del valor mín
+    ix(k)   = iix(1);
+    iy(k)   = iiy(1);
+    fx1   = fXpp(ix(k),iy(k)); % busca el potencial mínimo del punto actual
+    fy1   = fYpp(ix(k),iy(k));
+    fxx(k)  = fx1./norm(fX); % convierte el potencial en su valor unitario
+    fyy(k)  = fy1./norm(fY);
+    xp(k+1) = xp(k)+dh*(fxx(k)); % calcula el siguiente punto
+    yp(k+1) = yp(k)+dh*(fyy(k));
+     if (sqrt((xp(k+1)-xT(1)).^2+(yp(k+1)-xT(2)).^2)<=2.0)
+         ss=0;
+     end
+    k=k+1;
+end
+
+hold
+plot([xp],[yp],'r')
+
+%end
+
